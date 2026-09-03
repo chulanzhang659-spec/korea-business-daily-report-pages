@@ -61,6 +61,14 @@ const stateLabels = {
   WORKDAY_ONLY: '仅工作日',
 };
 
+function weekendSalesLabel(reportDate, result) {
+  const date = new Date(`${reportDate}T00:00:00Z`);
+  const weekdayFromMonday = (date.getUTCDay() + 6) % 7;
+  const usesPreviousWeekend = result?.detail?.startsWith('上周末')
+    || (result?.status === 'WORKDAY_ONLY' && weekdayFromMonday < 5);
+  return usesPreviousWeekend ? '上周末净销售' : '本周周末净销售';
+}
+
 function metricView(result, formatter = percent) {
   if (result?.status === 'READY' && result.value !== null && result.value !== undefined) {
     return element('span', { text: formatter(result.value) });
@@ -247,7 +255,7 @@ function renderUnit(unit, report, day, progress) {
     ['同比', unit.year_over_year, percent],
     ['环比', unit.month_over_month, percent],
     ['本周工作日净销售', unit.weekday_net_sales, money],
-    ['本周周末净销售', unit.weekend_net_sales, money],
+    [weekendSalesLabel(report.report_date, unit.weekend_net_sales), unit.weekend_net_sales, money],
   ]) {
     const item = element('div', { className: 'comparison-item' });
     addText(item, 'div', label, 'comparison-label');
@@ -597,7 +605,7 @@ export function renderReport(root, report, options = {}) {
   const filters = element('div', { className: 'filters' });
   const brandCard = element('div', { className: 'card table-card' });
   addText(brandCard, 'div', '品牌表现对比', 'table-head');
-  const brandTable = createTable(['排名', '品牌', '当日净销售额', '月累计净销售额', '本周工作日净销售', '本周周末净销售', '派样销售额', '退货率', '月目标达成率', '目标进度差', '同比', '环比']);
+  const brandTable = createTable(['排名', '品牌', '当日净销售额', '月累计净销售额', '本周工作日净销售', weekendSalesLabel(report.report_date, report.overall?.weekend_net_sales), '派样销售额', '退货率', '月目标达成率', '目标进度差', '同比', '环比']);
   brandCard.append(brandTable.wrap);
   const applyFilter = (brand) => {
     const visibleBrands = brand === 'all' ? model.brands : model.brands.filter((item) => item.brand === brand);
