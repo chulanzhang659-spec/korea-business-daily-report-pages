@@ -334,7 +334,7 @@ function fillStoreRows(body, stores, progress) {
 }
 
 function platformForChannelRow(row) {
-  return ['天猫', '抖音', '快手'].find((platform) => (
+  return ['天猫', '抖音', '快手', '小红书'].find((platform) => (
     row?.store_or_account === platform || row?.store_or_account?.startsWith(`${platform}-`)
   ));
 }
@@ -350,7 +350,7 @@ function sumChannelRows(rows, key) {
 
 function renderOngredientsChannels(report) {
   const section = element('section', { className: 'section', id: 'channels' });
-  addSectionHeader(section, 'Ongredients 达播与自营', '飞书三平台合计 · 展开查看跨境/内贸', '播');
+  addSectionHeader(section, 'Ongredients 达播与自营', '飞书三平台合计 · 小红书独立展示', '播');
   const card = element('div', { className: 'card channel-card' });
   const channelData = report.ongredients_channels;
   if (!channelData) {
@@ -362,7 +362,7 @@ function renderOngredientsChannels(report) {
   const summary = element('div', { className: 'channel-summary' });
   const lead = element('div', { className: 'channel-lead' });
   addText(lead, 'div', channelData.brand, 'channel-brand');
-  addText(lead, 'div', '达人和自营分开展示，不计入七品牌净销售额。', 'channel-note');
+  addText(lead, 'div', '飞书三平台达人和对应自营分开展示，不计入七品牌净销售额。小红书单列呈现，不计入三平台合计。', 'channel-note');
   const kpis = element('div', { className: 'channel-kpis' });
   for (const [label, value] of [['达人', channelData.dabo_sales], ['自营', channelData.self_operated_sales]]) {
     const kpi = element('div', { className: 'channel-kpi' });
@@ -379,12 +379,12 @@ function renderOngredientsChannels(report) {
 
   const rows = (channelData.rows ?? []).filter((row) => platformForChannelRow(row));
   const grid = element('div', { className: 'channel-platform-grid' });
-  for (const platform of ['天猫', '抖音', '快手']) {
+  for (const platform of ['天猫', '抖音', '快手', '小红书']) {
     const platformRows = rows.filter((row) => platformForChannelRow(row) === platform);
-    const details = element('details', { className: 'channel-platform' });
+    const details = element('details', { className: `channel-platform${platform === '小红书' ? ' channel-platform-extra' : ''}` });
     const summaryNode = element('summary');
     addText(summaryNode, 'span', platform, 'channel-platform-title');
-    addText(summaryNode, 'span', '跨境 / 内贸明细', 'channel-platform-hint');
+    addText(summaryNode, 'span', platform === '小红书' ? '独立展示 · 不计入三平台合计' : '跨境 / 内贸明细', 'channel-platform-hint');
     addText(
       summaryNode,
       'span',
