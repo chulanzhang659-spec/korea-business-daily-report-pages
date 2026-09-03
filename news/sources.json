@@ -1,0 +1,30 @@
+[
+  {
+    "id": "cosmetics-design",
+    "domain": "beauty",
+    "category": "美妆行业",
+    "source": "CosmeticsDesign",
+    "url": "https://www.cosmeticsdesign.com/Article-RSS"
+  },
+  {
+    "id": "beauty-packaging",
+    "domain": "beauty",
+    "category": "美妆行业",
+    "source": "Beauty Packaging",
+    "url": "https://www.beautypackaging.com/rss/"
+  },
+  {
+    "id": "openai-news",
+    "domain": "ai",
+    "category": "AI 变化",
+    "source": "OpenAI News",
+    "url": "https://openai.com/news/rss.xml"
+  },
+  {
+    "id": "google-blog",
+    "domain": "ai",
+    "category": "AI 变化",
+    "source": "Google Blog",
+    "url": "https://blog.google/feed/"
+  }
+]
